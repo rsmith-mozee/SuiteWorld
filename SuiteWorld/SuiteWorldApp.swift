@@ -38,22 +38,10 @@ struct SuiteWorldApp: App {
         .windowResizability(.contentSize)
         
         Window("Marquee", id: WindowID.marquee.rawValue) {
-            HorizontalView()
+            MarqueeView()
         }
         .defaultSize(width: 1920, height: 1080)
         .windowResizability(.contentSize)
-        
-//        Commands {
-//            CommandMenu("Windows") {
-//                Button("Show All") {
-//                    openWindow(id: WindowID.facia1.rawValue)
-//                    openWindow(id: WindowID.facia2.rawValue)
-//                    openWindow(id: WindowID.tower1.rawValue)
-//                    openWindow(id: WindowID.tower2.rawValue)
-//                    openWindow(id: WindowID.marquee.rawValue)
-//                }.keyboardShortcut("a", modifiers: [.command])
-//            }
-//        }
     }
 }
 
@@ -123,5 +111,17 @@ struct VerticalView: View {
                 player2.play()
             }
         }
+    }
+}
+
+// MARK: - Marquee View
+struct MarqueeView: View {
+    var body: some View {
+        Text("Coming soon...")
+            .font(.largeTitle)
+            .bold()
+            .foregroundColor(.white)
+            .padding()
+            .background(Color.black.opacity(0.5))
     }
 }
