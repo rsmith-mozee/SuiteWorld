@@ -7,41 +7,47 @@
 
 import SwiftUI
 import AVKit
+import AppKit
 
 @main
 struct SuiteWorldApp: App {
+    
+    init() {
+        UserDefaults.standard.set(true, forKey: "NSFullScreenMenuItemEverywhere")
+    }
+    
     @Environment(\.openWindow) private var openWindow
     
     var body: some Scene {
         Window("Facia1", id: WindowID.facia1.rawValue) {
             HorizontalView()
+                .makeFullScreen()
         }
-        .defaultSize(width: 1920, height: 1080)
-        .windowResizability(.contentSize)
+        .defaultSize(width: 3840, height: 720)
         
         Window("Facia2", id: WindowID.facia2.rawValue) {
             HorizontalView()
+                .makeFullScreen()
         }
-        .defaultSize(width: 1920, height: 1080)
-        .windowResizability(.contentSize)
+        .defaultSize(width: 3840, height: 720)
         
         Window("Tower1", id: WindowID.tower1.rawValue) {
             VerticalView()
+                .makeFullScreen()
         }
-        .defaultSize(width: 1080, height: 1920)
-        .windowResizability(.contentSize)
+        .defaultSize(width: 720, height: 3840)
         
         Window("Tower2", id: WindowID.tower2.rawValue) {
             VerticalView()
+                .makeFullScreen()
         }
-        .defaultSize(width: 1080, height: 1920)
-        .windowResizability(.contentSize)
+        .defaultSize(width: 720, height: 3840)
         
         Window("Marquee", id: WindowID.marquee.rawValue) {
             MarqueeView()
+                .makeFullScreen()
         }
         .defaultSize(width: 1920, height: 1080)
-        .windowResizability(.contentSize)
     }
 }
 
@@ -74,10 +80,23 @@ struct HorizontalView: View {
     }()
     
     var body: some View {
-        VStack {
+        ZStack {
             VideoPlayer(player: player)
-                .ignoresSafeArea(.all)
+            
+            VStack {
+                Spacer()
+                HStack {
+                    Image("watermark", bundle: Bundle.main)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100)
+                        .padding()
+                        .opacity(0.25)
+                    Spacer()
+                }
+            }
         }
+        .windowFullScreenBehavior(.enabled)
         .onAppear() {
             openWindow(id: WindowID.facia2.rawValue)
             openWindow(id: WindowID.tower1.rawValue)
@@ -123,5 +142,21 @@ struct MarqueeView: View {
             .foregroundColor(.white)
             .padding()
             .background(Color.black.opacity(0.5))
+    }
+}
+
+
+
+extension View {
+    func makeFullScreen() -> some View {
+        self.onAppear {
+            if let window = NSApplication.shared.windows.last {
+                DispatchQueue.main.async {
+                    if !window.styleMask.contains(.fullScreen) {
+                        window.toggleFullScreen(nil)
+                    }
+                }
+            }
+        }
     }
 }
