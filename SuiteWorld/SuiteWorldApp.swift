@@ -27,7 +27,7 @@ struct SuiteWorldApp: App {
 //        }
 //        .windowStyle(.hiddenTitleBar)
 //        .windowResizability(.contentSize)
-//        
+//
 //        WindowGroup(id: "facia1") {
 //            HorizontalView()
 //                .onReceive(NotificationCenter.default.publisher(for: NSApplication.willUpdateNotification)) { _ in
@@ -38,7 +38,7 @@ struct SuiteWorldApp: App {
 //        }
 //        .windowStyle(.hiddenTitleBar)
 //        .windowResizability(.contentSize)
-//        
+//
 //        WindowGroup(id: "facia2") {
 //            HorizontalView()
 //                .onReceive(NotificationCenter.default.publisher(for: NSApplication.willUpdateNotification)) { _ in
@@ -157,10 +157,10 @@ struct HorizontalView: View {
         }
         .windowFullScreenBehavior(.enabled)
         .onAppear() {
-//            openWindow(id: WindowID.facia2.rawValue)
-//            openWindow(id: WindowID.tower1.rawValue)
-//            openWindow(id: WindowID.tower2.rawValue)
-//            openWindow(id: WindowID.marquee.rawValue)
+            openWindow(id: WindowID.facia2.rawValue)
+            openWindow(id: WindowID.tower1.rawValue)
+            openWindow(id: WindowID.tower2.rawValue)
+            openWindow(id: WindowID.marquee.rawValue)
             NotificationCenter.default.addObserver(forName: AVPlayerItem.didPlayToEndTimeNotification, object: nil, queue: .main) { notification in
                 player.seek(to: .zero)
                 player.play()
@@ -254,11 +254,11 @@ func setWindowStyleMask() {
     }
 //    if let window = NSApplication.shared.windows.last {
 //        var newStyleMask = window.styleMask
-//        
+//
 //        newStyleMask.remove(.closable)
 //        newStyleMask.remove(.miniaturizable)
 //        newStyleMask.remove(.resizable)
-//        
+//
 //        window.styleMask = newStyleMask
 //    }
 }
