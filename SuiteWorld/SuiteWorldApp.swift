@@ -12,42 +12,98 @@ import AppKit
 @main
 struct SuiteWorldApp: App {
     
-    init() {
-        UserDefaults.standard.set(true, forKey: "NSFullScreenMenuItemEverywhere")
-    }
+//    init() {
+//        UserDefaults.standard.set(true, forKey: "NSFullScreenMenuItemEverywhere")
+//    }
     
     @Environment(\.openWindow) private var openWindow
     
+    
+    
     var body: some Scene {
+        
+//        WindowGroup("Launcher") {
+//            LauncherView()
+//        }
+//        .windowStyle(.hiddenTitleBar)
+//        .windowResizability(.contentSize)
+//        
+//        WindowGroup(id: "facia1") {
+//            HorizontalView()
+//                .onReceive(NotificationCenter.default.publisher(for: NSApplication.willUpdateNotification)) { _ in
+//                    setWindowStyleMask()
+//                }
+//                .frame(width: 1920, height: 360)
+//                .toolbar(removing: .title)
+//        }
+//        .windowStyle(.hiddenTitleBar)
+//        .windowResizability(.contentSize)
+//        
+//        WindowGroup(id: "facia2") {
+//            HorizontalView()
+//                .onReceive(NotificationCenter.default.publisher(for: NSApplication.willUpdateNotification)) { _ in
+//                    setWindowStyleMask()
+//                }
+//                .frame(width: 1920, height: 360)
+//                .toolbar(removing: .title)
+//        }
+//        .windowStyle(.hiddenTitleBar)
+//        .windowResizability(.contentSize)
+        
         Window("Facia1", id: WindowID.facia1.rawValue) {
             HorizontalView()
-                .makeFullScreen()
+                .onAppear() {
+                    setWindowStyleMask()
+                }
+                .onReceive(NotificationCenter.default.publisher(for: NSApplication.willUpdateNotification)) { _ in
+                    setWindowStyleMask()
+                }
+                .frame(width: 1920, height: 360)
+                .toolbar(removing: .title)
         }
-        .defaultSize(width: 3840, height: 720)
+        .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
         
         Window("Facia2", id: WindowID.facia2.rawValue) {
             HorizontalView()
-                .makeFullScreen()
+                .onAppear() {
+                    setWindowStyleMask()
+                }
+                .onReceive(NotificationCenter.default.publisher(for: NSApplication.willUpdateNotification)) { _ in
+                    setWindowStyleMask()
+                }
+                .frame(width: 1920, height: 360)
+                .toolbar(removing: .title)
         }
-        .defaultSize(width: 3840, height: 720)
-        
+        .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
+//
         Window("Tower1", id: WindowID.tower1.rawValue) {
             VerticalView()
-                .makeFullScreen()
+                .onReceive(NotificationCenter.default.publisher(for: NSApplication.willUpdateNotification)) { _ in
+                    setWindowStyleMask()
+                }
         }
-        .defaultSize(width: 720, height: 3840)
+        .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
         
         Window("Tower2", id: WindowID.tower2.rawValue) {
             VerticalView()
-                .makeFullScreen()
+                .onReceive(NotificationCenter.default.publisher(for: NSApplication.willUpdateNotification)) { _ in
+                    setWindowStyleMask()
+                }
         }
-        .defaultSize(width: 720, height: 3840)
+        .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
         
         Window("Marquee", id: WindowID.marquee.rawValue) {
             MarqueeView()
-                .makeFullScreen()
+                .onReceive(NotificationCenter.default.publisher(for: NSApplication.willUpdateNotification)) { _ in
+                    setWindowStyleMask()
+                }
         }
-        .defaultSize(width: 1920, height: 1080)
+        .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
     }
 }
 
@@ -82,26 +138,29 @@ struct HorizontalView: View {
     var body: some View {
         ZStack {
             VideoPlayer(player: player)
+                .frame(width: 1920, height: 360)
+                .aspectRatio(contentMode: .fill)
+                .edgesIgnoringSafeArea(.all)
             
-            VStack {
-                Spacer()
-                HStack {
-                    Image("watermark", bundle: Bundle.main)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100)
-                        .padding()
-                        .opacity(0.25)
-                    Spacer()
-                }
-            }
+//            VStack {
+//                Spacer()
+//                HStack {
+//                    Image("watermark", bundle: Bundle.main)
+//                        .resizable()
+//                        .scaledToFit()
+//                        .frame(width: 100)
+//                        .padding()
+//                        .opacity(0.25)
+//                    Spacer()
+//                }
+//            }
         }
         .windowFullScreenBehavior(.enabled)
         .onAppear() {
-            openWindow(id: WindowID.facia2.rawValue)
-            openWindow(id: WindowID.tower1.rawValue)
-            openWindow(id: WindowID.tower2.rawValue)
-            openWindow(id: WindowID.marquee.rawValue)
+//            openWindow(id: WindowID.facia2.rawValue)
+//            openWindow(id: WindowID.tower1.rawValue)
+//            openWindow(id: WindowID.tower2.rawValue)
+//            openWindow(id: WindowID.marquee.rawValue)
             NotificationCenter.default.addObserver(forName: AVPlayerItem.didPlayToEndTimeNotification, object: nil, queue: .main) { notification in
                 player.seek(to: .zero)
                 player.play()
@@ -122,7 +181,9 @@ struct VerticalView: View {
     var body: some View {
         VStack {
             VideoPlayer(player: player2)
-                .ignoresSafeArea(.all)
+                .frame(width: 360, height: 1920)
+                .aspectRatio(contentMode: .fill)
+                .edgesIgnoringSafeArea(.all)
         }
         .onAppear() {
             NotificationCenter.default.addObserver(forName: AVPlayerItem.didPlayToEndTimeNotification, object: nil, queue: .main) { notification in
@@ -145,6 +206,30 @@ struct MarqueeView: View {
     }
 }
 
+private struct LauncherView: View {
+    @Environment(\.openWindow) private var openWindow
+    @State private var didLaunch = false
+    
+    var body: some View {
+        Color.clear
+            .frame(width: 1, height: 1)
+            .task {
+                guard !didLaunch else { return }
+                didLaunch = true
+                
+                for id in ["facia1", "facia2"] {
+                    openWindow(id: id)
+                }
+                
+                DispatchQueue.main.async {
+                    if let launcher = NSApp.windows.first(where: { $0.title == "Launcher" }) {
+                        launcher.close()
+                    }
+                }
+            }
+    }
+}
+
 
 
 extension View {
@@ -159,4 +244,21 @@ extension View {
             }
         }
     }
+}
+
+func setWindowStyleMask() {
+    for window in NSApplication.shared.windows {
+        window.styleMask.remove(.closable)
+        window.styleMask.remove(.miniaturizable)
+        window.styleMask.remove(.resizable)
+    }
+//    if let window = NSApplication.shared.windows.last {
+//        var newStyleMask = window.styleMask
+//        
+//        newStyleMask.remove(.closable)
+//        newStyleMask.remove(.miniaturizable)
+//        newStyleMask.remove(.resizable)
+//        
+//        window.styleMask = newStyleMask
+//    }
 }
