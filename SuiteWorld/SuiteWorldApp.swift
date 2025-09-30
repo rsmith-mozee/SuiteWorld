@@ -197,12 +197,11 @@ struct VerticalView: View {
 // MARK: - Marquee View
 struct MarqueeView: View {
     var body: some View {
-        Text("Coming soon...")
-            .font(.largeTitle)
-            .bold()
-            .foregroundColor(.white)
-            .padding()
-            .background(Color.black.opacity(0.5))
+        Image("oracle_logo")
+            .resizable()
+            .frame(width: 1920, height: 360)
+            .aspectRatio(contentMode: .fit)
+            .ignoresSafeArea(.all)
     }
 }
 
